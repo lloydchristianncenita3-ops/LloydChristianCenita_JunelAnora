@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bag Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body { background:#f5f5f5; }
+
+        .card {
+            border-radius: 15px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-img {
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container py-4">
+
+    <h2 class="text-center mb-4">👜 Bag Store</h2>
+
+    <!-- PRODUCTS -->
+    <div class="row">
+        {% for bag in bags %}
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm h-100">
+
+                <!-- ✅ FIXED IMAGE (FROM DATABASE) -->
+                <img src="{{ url_for('get_image', bag_id=bag.id) }}" class="product-img">
+
+                <div class="card-body d-flex flex-column">
+                    <h6>{{ bag.name }}</h6>
+                    <small class="text-muted">{{ bag.category }}</small>
+                    <p class="fw-bold">₱{{ bag.price }}</p>
+
+                    <form method="POST" action="/add_order" class="mt-auto">
+                        <input type="hidden" name="bag_id" value="{{ bag.id }}">
+                        <input type="text" name="name" placeholder="Your Name" class="form-control mb-1" required>
+                        <input type="text" name="contact" placeholder="Contact" class="form-control mb-2" required>
+                        <button class="btn btn-dark w-100 btn-sm">Order</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ORDERS -->
+    <div class="mt-5">
+        <h4>📦 Orders</h4>
+        <ul class="list-group">
+            {% for o in orders %}
+            <li class="list-group-item">
+                <strong>{{ o.customer.name }}</strong> ordered 
+                <strong>{{ o.bag.name }}</strong>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
